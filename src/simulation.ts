@@ -215,7 +215,7 @@ export class Simulation<
    * such as when dragging a node, or to resume the simulation after temporarily pausing it with simulation.stop.
    */
   restart() {
-    this.stepper.restart(this.step);
+    this.stepper.restart(()=>this.step());
     return this;
   }
 
