@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 
 export function assertNodeEqual(actual, expected, delta = 1e-6) {
   assert(nodeEqual(actual, expected, delta), `${actual} and ${expected} should be similar`);
@@ -13,3 +13,6 @@ function nodeEqual(actual, expected, delta) {
       && !(Math.abs(actual.fx - expected.fx) > delta)
       && !(Math.abs(actual.fy - expected.fy) > delta);
 }
+
+
+// @todo rewrite d3-timer cos of timer Leak
