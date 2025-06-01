@@ -3,7 +3,7 @@
   "name": "@kaminazuma/d3-force",
   "version": "0.1.0",
   "license": "ISC",
-  "exports": "./src/index.js",
+  "exports": "./src/index.ts",
   "compilerOptions": {
   },
   "tasks": {
