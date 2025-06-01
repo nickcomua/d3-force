@@ -1,21 +1,23 @@
-import {quadtree} from "d3-quadtree";
-import constant from "./constant.js";
-import jiggle from "./jiggle.js";
-import {x, y} from "./simulation.js";
+import { quadtree } from "d3-quadtree";
+import constant from "./constant.ts";
+import jiggle from "./jiggle.ts";
+import { x, y } from "./simulation.ts";
 
-export default function() {
+export default function () {
   var nodes,
-      node,
-      random,
-      alpha,
-      strength = constant(-30),
-      strengths,
-      distanceMin2 = 1,
-      distanceMax2 = Infinity,
-      theta2 = 0.81;
+    node,
+    random,
+    alpha,
+    strength = constant(-30),
+    strengths,
+    distanceMin2 = 1,
+    distanceMax2 = Infinity,
+    theta2 = 0.81;
 
   function force(_) {
-    var i, n = nodes.length, tree = quadtree(nodes, x, y).visitAfter(accumulate);
+    var i,
+      n = nodes.length,
+      tree = quadtree(nodes, x, y).visitAfter(accumulate);
     for (alpha = _, i = 0; i < n; ++i) node = nodes[i], tree.visit(apply);
   }
 
@@ -23,7 +25,9 @@ export default function() {
     if (!nodes) return;
     var i, n = nodes.length, node;
     strengths = new Array(n);
-    for (i = 0; i < n; ++i) node = nodes[i], strengths[node.index] = +strength(node, i, nodes);
+    for (i = 0; i < n; ++i) {
+      node = nodes[i], strengths[node.index] = +strength(node, i, nodes);
+    }
   }
 
   function accumulate(quad) {
@@ -38,15 +42,12 @@ export default function() {
       }
       quad.x = x / weight;
       quad.y = y / weight;
-    }
-
-    // For leaf nodes, accumulate forces from coincident quadrants.
+    } // For leaf nodes, accumulate forces from coincident quadrants.
     else {
       q = quad;
       q.x = q.data.x;
       q.y = q.data.y;
-      do strength += strengths[q.data.index];
-      while (q = q.next);
+      do strength += strengths[q.data.index]; while (q = q.next);
     }
 
     quad.value = strength;
@@ -56,9 +57,9 @@ export default function() {
     if (!quad.value) return true;
 
     var x = quad.x - node.x,
-        y = quad.y - node.y,
-        w = x2 - x1,
-        l = x * x + y * y;
+      y = quad.y - node.y,
+      w = x2 - x1,
+      l = x * x + y * y;
 
     // Apply the Barnes-Hut approximation if possible.
     // Limit forces for very close nodes; randomize direction if coincident.
@@ -71,9 +72,7 @@ export default function() {
         node.vy += y * quad.value * alpha / l;
       }
       return true;
-    }
-
-    // Otherwise, process points directly.
+    } // Otherwise, process points directly.
     else if (quad.length || l >= distanceMax2) return;
 
     // Limit forces for very close nodes; randomize direction if coincident.
@@ -90,25 +89,33 @@ export default function() {
     } while (quad = quad.next);
   }
 
-  force.initialize = function(_nodes, _random) {
+  force.initialize = function (_nodes, _random) {
     nodes = _nodes;
     random = _random;
     initialize();
   };
 
-  force.strength = function(_) {
-    return arguments.length ? (strength = typeof _ === "function" ? _ : constant(+_), initialize(), force) : strength;
+  force.strength = function (_) {
+    return arguments.length
+      ? (strength = typeof _ === "function" ? _ : constant(+_),
+        initialize(),
+        force)
+      : strength;
   };
 
-  force.distanceMin = function(_) {
-    return arguments.length ? (distanceMin2 = _ * _, force) : Math.sqrt(distanceMin2);
+  force.distanceMin = function (_) {
+    return arguments.length
+      ? (distanceMin2 = _ * _, force)
+      : Math.sqrt(distanceMin2);
   };
 
-  force.distanceMax = function(_) {
-    return arguments.length ? (distanceMax2 = _ * _, force) : Math.sqrt(distanceMax2);
+  force.distanceMax = function (_) {
+    return arguments.length
+      ? (distanceMax2 = _ * _, force)
+      : Math.sqrt(distanceMax2);
   };
 
-  force.theta = function(_) {
+  force.theta = function (_) {
     return arguments.length ? (theta2 = _ * _, force) : Math.sqrt(theta2);
   };
 

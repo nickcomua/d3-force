@@ -1,6 +1,6 @@
-import {quadtree} from "d3-quadtree";
-import constant from "./constant.js";
-import jiggle from "./jiggle.js";
+import { quadtree } from "d3-quadtree";
+import constant from "./constant.ts";
+import jiggle from "./jiggle.ts";
 
 function x(d) {
   return d.x + d.vx;
@@ -10,23 +10,19 @@ function y(d) {
   return d.y + d.vy;
 }
 
-export default function(radius) {
+export default function (radius) {
   var nodes,
-      radii,
-      random,
-      strength = 1,
-      iterations = 1;
+    radii,
+    random,
+    strength = 1,
+    iterations = 1;
 
-  if (typeof radius !== "function") radius = constant(radius == null ? 1 : +radius);
+  if (typeof radius !== "function") {
+    radius = constant(radius == null ? 1 : +radius);
+  }
 
   function force() {
-    var i, n = nodes.length,
-        tree,
-        node,
-        xi,
-        yi,
-        ri,
-        ri2;
+    var i, n = nodes.length, tree, node, xi, yi, ri, ri2;
 
     for (var k = 0; k < iterations; ++k) {
       tree = quadtree(nodes, x, y).visitAfter(prepare);
@@ -44,8 +40,8 @@ export default function(radius) {
       if (data) {
         if (data.index > node.index) {
           var x = xi - data.x - data.vx,
-              y = yi - data.y - data.vy,
-              l = x * x + y * y;
+            y = yi - data.y - data.vy,
+            l = x * x + y * y;
           if (l < r * r) {
             if (x === 0) x = jiggle(random), l += x * x;
             if (y === 0) y = jiggle(random), l += y * y;
@@ -75,25 +71,31 @@ export default function(radius) {
     if (!nodes) return;
     var i, n = nodes.length, node;
     radii = new Array(n);
-    for (i = 0; i < n; ++i) node = nodes[i], radii[node.index] = +radius(node, i, nodes);
+    for (i = 0; i < n; ++i) {
+      node = nodes[i], radii[node.index] = +radius(node, i, nodes);
+    }
   }
 
-  force.initialize = function(_nodes, _random) {
+  force.initialize = function (_nodes, _random) {
     nodes = _nodes;
     random = _random;
     initialize();
   };
 
-  force.iterations = function(_) {
+  force.iterations = function (_) {
     return arguments.length ? (iterations = +_, force) : iterations;
   };
 
-  force.strength = function(_) {
+  force.strength = function (_) {
     return arguments.length ? (strength = +_, force) : strength;
   };
 
-  force.radius = function(_) {
-    return arguments.length ? (radius = typeof _ === "function" ? _ : constant(+_), initialize(), force) : radius;
+  force.radius = function (_) {
+    return arguments.length
+      ? (radius = typeof _ === "function" ? _ : constant(+_),
+        initialize(),
+        force)
+      : radius;
   };
 
   return force;

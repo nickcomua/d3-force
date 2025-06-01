@@ -1,5 +1,5 @@
-import constant from "./constant.js";
-import jiggle from "./jiggle.js";
+import constant from "./constant.ts";
+import jiggle from "./jiggle.ts";
 
 function index(d) {
   return d.index;
@@ -11,17 +11,17 @@ function find(nodeById, nodeId) {
   return node;
 }
 
-export default function(links) {
+export default function (links) {
   var id = index,
-      strength = defaultStrength,
-      strengths,
-      distance = constant(30),
-      distances,
-      nodes,
-      count,
-      bias,
-      random,
-      iterations = 1;
+    strength = defaultStrength,
+    strengths,
+    distance = constant(30),
+    distances,
+    nodes,
+    count,
+    bias,
+    random,
+    iterations = 1;
 
   if (links == null) links = [];
 
@@ -50,21 +50,27 @@ export default function(links) {
     if (!nodes) return;
 
     var i,
-        n = nodes.length,
-        m = links.length,
-        nodeById = new Map(nodes.map((d, i) => [id(d, i, nodes), d])),
-        link;
+      n = nodes.length,
+      m = links.length,
+      nodeById = new Map(nodes.map((d, i) => [id(d, i, nodes), d])),
+      link;
 
     for (i = 0, count = new Array(n); i < m; ++i) {
       link = links[i], link.index = i;
-      if (typeof link.source !== "object") link.source = find(nodeById, link.source);
-      if (typeof link.target !== "object") link.target = find(nodeById, link.target);
+      if (typeof link.source !== "object") {
+        link.source = find(nodeById, link.source);
+      }
+      if (typeof link.target !== "object") {
+        link.target = find(nodeById, link.target);
+      }
       count[link.source.index] = (count[link.source.index] || 0) + 1;
       count[link.target.index] = (count[link.target.index] || 0) + 1;
     }
 
     for (i = 0, bias = new Array(m); i < m; ++i) {
-      link = links[i], bias[i] = count[link.source.index] / (count[link.source.index] + count[link.target.index]);
+      link = links[i],
+        bias[i] = count[link.source.index] /
+          (count[link.source.index] + count[link.target.index]);
     }
 
     strengths = new Array(m), initializeStrength();
@@ -87,30 +93,38 @@ export default function(links) {
     }
   }
 
-  force.initialize = function(_nodes, _random) {
+  force.initialize = function (_nodes, _random) {
     nodes = _nodes;
     random = _random;
     initialize();
   };
 
-  force.links = function(_) {
+  force.links = function (_) {
     return arguments.length ? (links = _, initialize(), force) : links;
   };
 
-  force.id = function(_) {
+  force.id = function (_) {
     return arguments.length ? (id = _, force) : id;
   };
 
-  force.iterations = function(_) {
+  force.iterations = function (_) {
     return arguments.length ? (iterations = +_, force) : iterations;
   };
 
-  force.strength = function(_) {
-    return arguments.length ? (strength = typeof _ === "function" ? _ : constant(+_), initializeStrength(), force) : strength;
+  force.strength = function (_) {
+    return arguments.length
+      ? (strength = typeof _ === "function" ? _ : constant(+_),
+        initializeStrength(),
+        force)
+      : strength;
   };
 
-  force.distance = function(_) {
-    return arguments.length ? (distance = typeof _ === "function" ? _ : constant(+_), initializeDistance(), force) : distance;
+  force.distance = function (_) {
+    return arguments.length
+      ? (distance = typeof _ === "function" ? _ : constant(+_),
+        initializeDistance(),
+        force)
+      : distance;
   };
 
   return force;

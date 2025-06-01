@@ -1,6 +1,6 @@
 import assert from "node:assert";
-import {forceSimulation, forceX, forceY} from "../src/index.js";
-import {assertNodeEqual} from "./asserts.js";
+import { forceSimulation, forceX, forceY } from "../src/index.ts";
+import { assertNodeEqual } from "./asserts.js";
 import { scheduler } from "node:timers/promises";
 
 Deno.test("forceX centers nodes", async () => {
@@ -36,7 +36,7 @@ Deno.test("forceY centers nodes", async () => {
 Deno.test("forceX respects fixed positions", async () => {
   const x = forceX(200);
   const f = forceSimulation().force("x", x).stop();
-  const a = { fx: 0, fy:0 }, b = {}, c = {};
+  const a = { fx: 0, fy: 0 }, b = {}, c = {};
   f.nodes([a, b, c]);
   f.tick();
   assertNodeEqual(a, { fx: 0, fy: 0, index: 0, x: 0, y: 0, vy: 0, vx: 0 });
@@ -46,7 +46,7 @@ Deno.test("forceX respects fixed positions", async () => {
 Deno.test("forceY respects fixed positions", async () => {
   const y = forceX(200);
   const f = forceSimulation().force("y", y).stop();
-  const a = { fx: 0, fy:0 }, b = {}, c = {};
+  const a = { fx: 0, fy: 0 }, b = {}, c = {};
   f.nodes([a, b, c]);
   f.tick();
   assertNodeEqual(a, { fx: 0, fy: 0, index: 0, x: 0, y: 0, vy: 0, vx: 0 });
@@ -54,9 +54,11 @@ Deno.test("forceY respects fixed positions", async () => {
 });
 
 Deno.test("forceX.x() accessor", async () => {
-  const x = forceX().x(d => d.x0);
+  const x = forceX().x((d) => d.x0);
   const f = forceSimulation().force("x", x).stop();
-  const a = { x: 100, y: 0, x0: 300 }, b = { x: 200, y: 0, x0: 200 }, c = { x: 300, y: 0, x0: 100 };
+  const a = { x: 100, y: 0, x0: 300 },
+    b = { x: 200, y: 0, x0: 200 },
+    c = { x: 300, y: 0, x0: 100 };
   f.nodes([a, b, c]);
   f.tick(30);
   assert(a.x > 290);
@@ -69,9 +71,11 @@ Deno.test("forceX.x() accessor", async () => {
 });
 
 Deno.test("forceY.y() accessor", async () => {
-  const y = forceY().y(d => d.y0);
+  const y = forceY().y((d) => d.y0);
   const f = forceSimulation().force("y", y).stop();
-  const a = { y: 100, x: 0, y0: 300 }, b = { y: 200, x: 0, y0: 200 }, c = { y: 300, x: 0, y0: 100 };
+  const a = { y: 100, x: 0, y0: 300 },
+    b = { y: 200, x: 0, y0: 200 },
+    c = { y: 300, x: 0, y0: 100 };
   f.nodes([a, b, c]);
   f.tick(30);
   assert(a.y > 290);

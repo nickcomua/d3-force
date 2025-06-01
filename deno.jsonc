@@ -4,10 +4,13 @@
   "version": "0.1.0",
   "license": "ISC",
   "exports": "./src/index.js",
+  "compilerOptions": {
+  },
   "tasks": {
     "test": "deno test 'test/**/*-test.js' && deno lint src test"
   },
   "imports": {
+    "@garretmh/typed-event-target": "jsr:@garretmh/typed-event-target@^1.0.0",
     "d3-dispatch": "npm:d3-dispatch@^3.0.1",
     "d3-quadtree": "npm:d3-quadtree@^3.0.1",
     "d3-timer": "npm:d3-timer@^3.0.1"

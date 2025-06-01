@@ -3,7 +3,7 @@ const a = 1664525;
 const c = 1013904223;
 const m = 4294967296; // 2^32
 
-export default function() {
+export default function () {
   let s = 1;
   return () => (s = (a * s + c) % m) / m;
 }
