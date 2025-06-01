@@ -158,7 +158,7 @@ export class Simulation<
   randomSource!: PropertyMethod<() => number, this>;
   private _randomSource = lcg();
 
-  private stepper = timer(this.step);
+  private stepper = timer(() => this.step());
   private event = dispatch("tick", "end");
   private forces = new Map<string, Force<NodeDatum,LinkDatum>>();
 
